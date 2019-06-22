@@ -5,16 +5,17 @@ using OpenQA.Selenium;
 
 namespace TestCase1
 {
-    class Program
+    class Test
     {
-        static IWebDriver browser;
+        IWebDriver browser;
 
-        static void Main(string[] args)
+        public Test(IWebDriver driver)
         {
-            
+            this.browser = driver;
+        }
 
-            browser = new OpenQA.Selenium.Chrome.ChromeDriver();//1. Открыть браузер
-
+        public void test()
+        {
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
             browser.Manage().Window.Maximize();//1.развернуть на весь экран
@@ -25,11 +26,12 @@ namespace TestCase1
 
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(7);
 
-            if(check("/html/body/div[4]/div[3]", browser))
+            if (check("/html/body/div[4]/div[3]"))
             {
                 browser.FindElement(By.XPath("/html/body/div[4]/div[3]/div/div/div[2]/div[1]")).Click();
                 browser.FindElement(By.XPath("/html/body/div[1]/div/span/div[2]/noindex/div[2]/div/div/div/div[2]")).Click();//4. Выбрать раздел электроника
-            } else browser.FindElement(By.XPath("/html/body/div[1]/div/span/div[2]/noindex/div[2]/div/div/div[2]")).Click();//4. Выбрать раздел электроника
+            }
+            else browser.FindElement(By.XPath("/html/body/div[1]/div/span/div[2]/noindex/div[2]/div/div/div[2]")).Click();//4. Выбрать раздел электроника
 
 
             browser.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -48,8 +50,9 @@ namespace TestCase1
             browser.FindElement(By.XPath("/html/body/div[1]/div[5]/div/div[1]/div[5]/a[2]")).Click();//9. Нажать кнопку Применить
 
             String str = browser.FindElement(By.XPath("/html/body/div[1]/div[5]/div[2]/div[1]/div[2]/div/div[3]/span/button/span")).GetAttribute("textContent");
-            
-            if (!str.Contains("12")) {
+
+            if (!str.Contains("12"))
+            {
                 browser.FindElement(By.XPath("/html/body/div[1]/div[5]/div[2]/div[1]/div[2]/div/div[3]/span")).Click();
                 browser.FindElement(By.ClassName("select__item")).Click();
             }//10. Проверить, что элементов на странице 12.
@@ -68,13 +71,14 @@ namespace TestCase1
                 MessageBox.Show("Success!");
             }
             else MessageBox.Show("Fail!");//13. Найти и проверить, что наименование товара соответствует запомненному значению.
+
         }
 
-        private static bool check(String str, IWebDriver driver)
+        bool check(String str)
         {
             try
             {
-                driver.FindElement(By.XPath(str));
+                browser.FindElement(By.XPath(str));
                 return true;
             }
             catch (NoSuchElementException)
@@ -82,5 +86,17 @@ namespace TestCase1
                 return false;
             }
         }
+    }
+
+    class Program
+    {      
+        static void Main(string[] args)
+        {
+            IWebDriver browser;
+            browser = new OpenQA.Selenium.Chrome.ChromeDriver();//1. Открыть браузер
+
+            Test test = new Test(browser);
+            test.test();
+        }        
     }
 }
