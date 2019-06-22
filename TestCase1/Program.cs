@@ -92,11 +92,14 @@ namespace TestCase1
     {      
         static void Main(string[] args)
         {
-            IWebDriver browser;
-            browser = new OpenQA.Selenium.Chrome.ChromeDriver();//1. Открыть браузер
-
+            IWebDriver browser = new OpenQA.Selenium.Firefox.FirefoxDriver();//1. Открыть браузер
+            IWebDriver browser2 = new OpenQA.Selenium.Chrome.ChromeDriver();
+                       
             Test test = new Test(browser);
             test.test();
-        }        
+
+            Test test2 = new Test(browser2);
+            test2.test();
+        }
     }
 }
